@@ -1,0 +1,6 @@
+git branch – Displays all available branch in local
+git branch branch_name – Creates new branch
+git checkout branch_name – Switching to required branch
+git status – List all the changes in the branch
+git add –all or git add specific_file – Adding files
+git commit -m “message” – Committing the changes
