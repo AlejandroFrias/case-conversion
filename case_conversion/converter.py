@@ -5,6 +5,7 @@ from case_conversion.types import Case
 from .parser import parse_case
 
 
+####### CLASS STYLE #######
 class Converter:
     case: Case | None
     text: str | None
@@ -23,22 +24,219 @@ class Converter:
             self.words = None
         self.acronyms = acronyms or []
 
-    def camel(self) -> str:
-        return _camel(words=self.words or [], acronyms=self.acronyms)
+    def camel(self, text: str | None = None) -> str:
+        """Return text in camelCase style.
 
-    def pascal(self) -> str:
-        return _pascal(words=self.words or [], acronyms=self.acronyms)
+        Args:
+            text (str): Input string to be converted
+            acronyms (optional, list of str): List of acronyms to honor
+
+        Returns:
+            str: Case converted text
+
+        Examples:
+            >>> converter = Converter(text="hello world")
+            >>> converter.camel()
+            'helloWorld'
+            >>> converter = Converter(acronyms=["HTML"])
+            >>> converter.camel("HELLO_HTML_WORLD)
+            'helloHTMLWorld'
+        """
+        if text:
+            words, *_ = parse_case(text, self.acronyms)
+            return _camel(words)
+        return _camel(self.words or [])
+
+    def pascal(self, text: str | None = None) -> str:
+        """Return text in PascalCase style.
+
+        This case style is also known as: MixedCase
+
+        Args:
+            text (str): Input string to be converted
+            acronyms (optional, list of str): List of acronyms to honor
+
+        Returns:
+            str: Case converted text
+
+        Examples:
+            >>> converter = Converter(text="hello world")
+            >>> converter.pascal()
+            'HelloWorld'
+            >>> converter = Converter(text="hello_html_world", acronyms=["HTML"])
+            >>> converter.pascal()
+            'HelloHTMLWorld'
+            >>> converter.pascal("A_DIFFERENT_HTML_STRING")
+            'ADifferentHTMLString'
+        """
+        if text:
+            words, *_ = parse_case(text, self.acronyms)
+            return _pascal(words)
+        return _pascal(self.words or [])
+
+    def snake(self, text: str | None = None) -> str:
+        """Return text in snake_case style.
+
+        Args:
+            text (str): Input string to be converted
+            acronyms (optional, list of str): List of acronyms to honor
+
+        Returns:
+            str: Case converted text
+
+        Examples:
+            >>> converter = Converter("hello world")
+            >>> converter.snake("hello world")
+            'hello_world'
+            >>> converter = Converter(text="helloHTMLWorld", acronyms=["HTML"])
+            >>> converter.snake()
+            'hello_html_world'
+            >>> converter.snake("A_DIFFERENT_HTML_STRING")
+            'a_different_html_string'
+        """
+        if text:
+            words, *_ = parse_case(text, self.acronyms)
+            return _snake(words)
+        return _snake(self.words or [])
+
+    def dash(self, text: str | None = None) -> str:
+        """Return text in dash-case style.
+
+        Args:
+            text (str): Input string to be converted
+            acronyms (optional, list of str): List of acronyms to honor
+
+        Returns:
+            str: Case converted text
+
+        Examples:
+            >>> converter = Converter("hello world")
+            >>> converter.dash("hello world")
+            'hello-world'
+            >>> converter = Converter(text="helloHTMLWorld", acronyms=["HTML"])
+            >>> converter.dash()
+            'hello-html-world'
+            >>> converter.dash("A_DIFFERENT_HTML_STRING")
+            'a-different-html-string'
+        """
+        if text:
+            words, *_ = parse_case(text, self.acronyms)
+            return _dash(words)
+        return _dash(self.words or [])
+
+    def const(self, text: str | None = None) -> str:
+        """Return text in CONST_CASE style.
+
+        This case style is also known as: SCREAMING_SNAKE_CASE
+
+        Args:
+            text (str): Input string to be converted
+            acronyms (optional, list of str): List of acronyms to honor
+
+        Returns:
+            str: Case converted text
+
+        Examples:
+            >>> converter = Converter("hello world")
+            >>> converter.const("hello world")
+            'HELLO_WORLD'
+            >>> converter = Converter(text="helloHTMLWorld", acronyms=["HTML"])
+            >>> converter.const()
+            'HELLO_HTML_WORLD'
+            >>> converter.const("A_DIFFERENT_HTML_STRING")
+            'A_DIFFERENT_HTML_STRING'
+        """
+        if text:
+            words, *_ = parse_case(text, self.acronyms)
+            return _const(words)
+        return _const(self.words or [])
+
+    def dot(self, text: str | None = None) -> str:
+        """Return text in dot.case style.
+
+        Args:
+            text (str): Input string to be converted
+            acronyms (optional, list of str): List of acronyms to honor
+
+        Returns:
+            str: Case converted text
+
+        Examples:
+            >>> converter = Converter("hello world")
+            >>> converter.dot("hello world")
+            'hello.world'
+            >>> converter = Converter(text="helloHTMLWorld", acronyms=["HTML"])
+            >>> converter.dot()
+            'hello.html.world'
+            >>> converter.dot("A_DIFFERENT_HTML_STRING")
+            'a.different.html.string'
+        """
+        if text:
+            words, *_ = parse_case(text, self.acronyms)
+            return _dot(words)
+        return _dot(self.words or [])
+
+    def separate_words(self, text: str | None = None) -> str:
+        """Return text in "separate words" style.
+
+        Args:
+            text (str): Input string to be converted
+            acronyms (optional, list of str): List of acronyms to honor
+
+        Returns:
+            str: Case converted text
+
+        Examples:
+            >>> converter = Converter("hello world")
+            >>> converter.separate_words("hello world")
+            'hello world'
+            >>> converter = Converter(text="helloHTMLWorld", acronyms=["HTML"])
+            >>> converter.separate_words()
+            'hello world'
+            >>> converter.separate_words("A_DIFFERENT_HTML_STRING")
+            'a different html string'
+        """
+        if text:
+            words, *_ = parse_case(text, self.acronyms)
+            return _separate_words(words)
+        return _separate_words(self.words or [])
 
 
-def _camel(words: list[str], acronyms: list[str] | None = None) -> str:
+############# HELPERS: word list -> str #################
+
+
+def _camel(words: list[str]) -> str:
     if not words:
         return ""
     words[0] = words[0].lower()
     return "".join(words)
 
-def _pascal(words: list[str], acronyms: list[str] | None = None) -> str:
+
+def _pascal(words: list[str]) -> str:
+    return "".join(words)
 
 
+def _snake(words: list[str]) -> str:
+    return "_".join([w.lower() for w in words])
+
+
+def _dash(words: list[str]) -> str:
+    return "-".join([w.lower() for w in words])
+
+
+def _dot(words: list[str]) -> str:
+    return ".".join([w.lower() for w in words])
+
+
+def _const(words: list[str]) -> str:
+    return "_".join([w.upper() for w in words])
+
+
+def _separate_words(words: List[str]) -> str:
+    return " ".join(words)
+
+
+######### FUNCTION STYLE #############
 def camel(text: str, acronyms: list[str] | None = None) -> str:
     """Return text in camelCase style.
 
@@ -56,7 +254,7 @@ def camel(text: str, acronyms: list[str] | None = None) -> str:
         'helloHTMLWorld'
     """
     words, *_ = parse_case(text, acronyms)
-    return _camel(words=words, acronyms=acronyms)
+    return _camel(words)
 
 
 def pascal(text: str, acronyms: Optional[List[str]] = None) -> str:
@@ -78,7 +276,7 @@ def pascal(text: str, acronyms: Optional[List[str]] = None) -> str:
         'HelloHTMLWorld'
     """
     words, *_ = parse_case(text, acronyms)
-    return "".join(words)
+    return _pascal(words)
 
 
 def snake(text: str, acronyms: Optional[List[str]] = None) -> str:
@@ -98,7 +296,7 @@ def snake(text: str, acronyms: Optional[List[str]] = None) -> str:
         'hello_html_world'
     """
     words, *_ = parse_case(text, acronyms)
-    return "_".join([w.lower() for w in words])
+    return _snake(words)
 
 
 def dash(text: str, acronyms: Optional[List[str]] = None) -> str:
@@ -120,7 +318,7 @@ def dash(text: str, acronyms: Optional[List[str]] = None) -> str:
         'hello-html-world'
     """
     words, *_ = parse_case(text, acronyms)
-    return "-".join([w.lower() for w in words])
+    return _dash(words)
 
 
 def const(text: str, acronyms: Optional[List[str]] = None) -> str:
@@ -142,7 +340,7 @@ def const(text: str, acronyms: Optional[List[str]] = None) -> str:
         'HELLO_HTML_WORLD'
     """
     words, *_ = parse_case(text, acronyms)
-    return "_".join([w.upper() for w in words])
+    return _const(words)
 
 
 def dot(text: str, acronyms: Optional[List[str]] = None) -> str:
@@ -162,7 +360,7 @@ def dot(text: str, acronyms: Optional[List[str]] = None) -> str:
         'hello.html.world'
     """
     words, *_ = parse_case(text, acronyms)
-    return ".".join([w.lower() for w in words])
+    return _dot(words)
 
 
 def separate_words(text: str, acronyms: Optional[List[str]] = None) -> str:
@@ -182,7 +380,7 @@ def separate_words(text: str, acronyms: Optional[List[str]] = None) -> str:
         'hello HTML World'
     """
     words, *_ = parse_case(text, acronyms, preserve_case=True)
-    return " ".join(words)
+    return _separate_words(words)
 
 
 def slash(text: str, acronyms: Optional[List[str]] = None) -> str:

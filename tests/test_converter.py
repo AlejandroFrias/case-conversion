@@ -12,8 +12,6 @@ CASES = [
     "pascal",
     "snake",
     "dash",
-    "dash",
-    "const",
     "const",
     "dot",
 ]
@@ -290,12 +288,19 @@ class CaseConversionTest(TestCase):
         Test conversions from all cases to all cases that don't preserve
         capital/lower case letters.
         """
+        # test function style, e.g. snake("helloWorld") -> "hello_world"
         case_converter = getattr(case_conversion, case)
         self.assertEqual(case_converter(value), expected)
 
+        # test class style with init text, e.g. Converter("helloWorld").snake() -> "hello_world"
         converter = case_conversion.Converter(text=value)
         case_converter = getattr(converter, case)
         self.assertEqual(case_converter(), expected)
+
+        # test class style without init text, e.g. Converter().snake("helloWorld") -> "hello_world"
+        converter = case_conversion.Converter()
+        case_converter = getattr(converter, case)
+        self.assertEqual(case_converter(value), expected)
 
     @parameterized.expand(_expand_values(VALUES_UNICODE))
     def test_unicode(self, _, case, value, expected):
@@ -303,7 +308,18 @@ class CaseConversionTest(TestCase):
         Test conversions from all cases to all cases that don't preserve
         capital/lower case letters (with unicode characters).
         """
+        # test function style, e.g. snake("helloWorld") -> "hello_world"
         case_converter = getattr(case_conversion, case)
+        self.assertEqual(case_converter(value), expected)
+
+        # test class style with init text, e.g. Converter("helloWorld").snake() -> "hello_world"
+        converter = case_conversion.Converter(text=value)
+        case_converter = getattr(converter, case)
+        self.assertEqual(case_converter(), expected)
+
+        # test class style without init text, e.g. Converter().snake("helloWorld") -> "hello_world"
+        converter = case_conversion.Converter()
+        case_converter = getattr(converter, case)
         self.assertEqual(case_converter(value), expected)
 
     @parameterized.expand(_expand_values(VALUES_SINGLE))
@@ -312,7 +328,18 @@ class CaseConversionTest(TestCase):
         Test conversions of single words from all cases to all cases that
         don't preserve capital/lower case letters.
         """
+        # test function style, e.g. snake("helloWorld") -> "hello_world"
         case_converter = getattr(case_conversion, case)
+        self.assertEqual(case_converter(value), expected)
+
+        # test class style with init text, e.g. Converter("helloWorld").snake() -> "hello_world"
+        converter = case_conversion.Converter(text=value)
+        case_converter = getattr(converter, case)
+        self.assertEqual(case_converter(), expected)
+
+        # test class style without init text, e.g. Converter().snake("helloWorld") -> "hello_world"
+        converter = case_conversion.Converter()
+        case_converter = getattr(converter, case)
         self.assertEqual(case_converter(value), expected)
 
     @parameterized.expand(_expand_values(VALUES_SINGLE_UNICODE))
@@ -321,7 +348,18 @@ class CaseConversionTest(TestCase):
         Test conversions of single words from all cases to all cases that
         don't preserve capital/lower case letters (with unicode characters).
         """
+        # test function style, e.g. snake("helloWorld") -> "hello_world"
         case_converter = getattr(case_conversion, case)
+        self.assertEqual(case_converter(value), expected)
+
+        # test class style with init text, e.g. Converter("helloWorld").snake() -> "hello_world"
+        converter = case_conversion.Converter(text=value)
+        case_converter = getattr(converter, case)
+        self.assertEqual(case_converter(), expected)
+
+        # test class style without init text, e.g. Converter().snake("helloWorld") -> "hello_world"
+        converter = case_conversion.Converter()
+        case_converter = getattr(converter, case)
         self.assertEqual(case_converter(value), expected)
 
     @parameterized.expand(_expand_values_preserve(PRESERVE_VALUES, VALUES))
@@ -330,7 +368,18 @@ class CaseConversionTest(TestCase):
         Test conversions from all cases to all cases that do preserve
         capital/lower case letters.
         """
+        # test function style, e.g. snake("helloWorld") -> "hello_world"
         case_converter = getattr(case_conversion, case)
+        self.assertEqual(case_converter(value), expected)
+
+        # test class style with init text, e.g. Converter("helloWorld").snake() -> "hello_world"
+        converter = case_conversion.Converter(text=value)
+        case_converter = getattr(converter, case)
+        self.assertEqual(case_converter(), expected)
+
+        # test class style without init text, e.g. Converter().snake("helloWorld") -> "hello_world"
+        converter = case_conversion.Converter()
+        case_converter = getattr(converter, case)
         self.assertEqual(case_converter(value), expected)
 
     @parameterized.expand(

@@ -1,5 +1,3 @@
-from typing import List, Optional, Tuple
-
 from .types import Case
 from .utils import (
     advanced_acronym_detection,
@@ -14,9 +12,9 @@ from .utils import (
 
 def parse_case(
     string: str,
-    acronyms: Optional[List[str]] = None,
+    acronyms: list[str] | None = None,
     preserve_case: bool = False,
-) -> Tuple[List[str], Case, str]:
+) -> tuple[list[str], Case, str]:
     """Split a string into words, determine its case and separator.
 
     Args:
@@ -67,7 +65,7 @@ def parse_case(
         i += 1
 
     # Separators are no longer needed, so they should be removed.
-    words: List[str] = [w for w in words_with_sep if w is not None]
+    words: list[str] = [w for w in words_with_sep if w is not None]
 
     # Determine case type.
     case_type = determine_case(was_upper, words, string)
