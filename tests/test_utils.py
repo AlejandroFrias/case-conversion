@@ -28,9 +28,18 @@ def test_segment_string(string, expected):
     "acronyms,expected",
     (
         (("http",), ["HTTP"]),
-        (("HTTP",), ["HTTP"],),
-        (("Http",), ["HTTP"],),
-        (("httP",), ["HTTP"],),
+        (
+            ("HTTP",),
+            ["HTTP"],
+        ),
+        (
+            ("Http",),
+            ["HTTP"],
+        ),
+        (
+            ("httP",),
+            ["HTTP"],
+        ),
         (("http", "Nasa"), ["HTTP", "NASA"]),
     ),
 )
@@ -84,7 +93,7 @@ def test_normalize_words(words, acronyms, expected):
 @pytest.mark.parametrize(
     "was_upper,words,string,expected",
     (
-        (False, [], "", Case.UNKOWN),
+        (False, [], "", Case.UNKNOWN),
         (True, [], "", Case.UPPER),
         (False, [], "foobar", Case.LOWER),
         (False, ["foo", "Bar"], "", Case.CAMEL),

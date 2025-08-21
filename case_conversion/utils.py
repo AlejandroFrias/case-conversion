@@ -4,7 +4,7 @@ from typing import Iterator, List, Optional, Tuple
 from .types import Case, InvalidAcronymError
 
 
-def get_rubstring_ranges(a_str: str, sub: str) -> Iterator[Tuple[int, int]]:  # noqa
+def get_substring_ranges(a_str: str, sub: str) -> Iterator[Tuple[int, int]]:  # noqa
     start = 0
     sub_len = len(sub)
     while True:
@@ -59,7 +59,7 @@ def determine_case(was_all_upper: bool, words: List[str], string: str) -> Case:
     Returns:
         Case: Determined case
     """
-    case_type = Case.UNKOWN
+    case_type = Case.UNKNOWN
     if was_all_upper:
         case_type = Case.UPPER
     elif string.islower():
@@ -87,7 +87,7 @@ def determine_case(was_all_upper: bool, words: List[str], string: str) -> Case:
 
 
 def advanced_acronym_detection(
-    s: int, i: int, words: List[str], acronyms: List[str]
+    s: int, i: int, words: list[str], acronyms: list[str]
 ) -> int:
     """Detect acronyms by checking against a list of acronyms.
 
@@ -110,7 +110,7 @@ def advanced_acronym_detection(
 
     # Search for each acronym in acr_str.
     for acr in acronyms:
-        for (start, end) in get_rubstring_ranges(acr_str, acr):
+        for start, end in get_substring_ranges(acr_str, acr):
             # Make sure found acronym doesn't overlap with others.
             for r in range_list:
                 if start < r[1] and end > r[0]:
@@ -192,7 +192,7 @@ def normalize_words(words: List[str], acronyms: List[str]) -> List[str]:
 
     Arguments:
         words (list of str): Words to normalize
-        acronyms (list of str): Acronymes to upper
+        acronyms (list of str): Acronyms to upper
 
     Returns:
         list of str: Normalized words
@@ -255,7 +255,7 @@ def segment_string(string: str) -> Tuple[List[Optional[str]], str, bool]:
             elif char_is_sep(char) and not char_is_sep(prev_i):
                 split = True
         else:
-            # The looprev_igoes one extra iteration so that it can
+            # The loop goes one extra iteration so that it can
             # handle the remaining text after the last boundary.
             split = True
 

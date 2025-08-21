@@ -13,9 +13,11 @@ from .utils import (
 
 
 def parse_case(
-    string: str, acronyms: Optional[List[str]] = None, preserve_case: bool = False,
+    string: str,
+    acronyms: Optional[List[str]] = None,
+    preserve_case: bool = False,
 ) -> Tuple[List[str], Case, str]:
-    """Split a string into words, determine its case and seperator.
+    """Split a string into words, determine its case and separator.
 
     Args:
         string (str): Input string to be converted
@@ -25,7 +27,7 @@ def parse_case(
     Returns:
         list of str: Segmented input string
         Case: Determined case
-        str: Determined seperator
+        str: Determined separator
 
     Examples:
         >>> parse_case("hello_world")

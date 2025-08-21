@@ -1,9 +1,45 @@
 from typing import List, Optional
 
+from case_conversion.types import Case
+
 from .parser import parse_case
 
 
-def camel(text: str, acronyms: Optional[List[str]] = None) -> str:
+class Converter:
+    case: Case | None
+    text: str | None
+    words: list[str] | None
+    separators: str | None
+    acronyms: list[str]
+
+    def __init__(self, text: str | None = None, acronyms: list[str] | None = None):
+        if text:
+            words, case, separators = parse_case(text, acronyms)
+            self.text = text
+            self.words = words
+            self.separators = separators
+            self.case = case
+        else:
+            self.words = None
+        self.acronyms = acronyms or []
+
+    def camel(self) -> str:
+        return _camel(words=self.words or [], acronyms=self.acronyms)
+
+    def pascal(self) -> str:
+        return _pascal(words=self.words or [], acronyms=self.acronyms)
+
+
+def _camel(words: list[str], acronyms: list[str] | None = None) -> str:
+    if not words:
+        return ""
+    words[0] = words[0].lower()
+    return "".join(words)
+
+def _pascal(words: list[str], acronyms: list[str] | None = None) -> str:
+
+
+def camel(text: str, acronyms: list[str] | None = None) -> str:
     """Return text in camelCase style.
 
     Args:
@@ -20,9 +56,7 @@ def camel(text: str, acronyms: Optional[List[str]] = None) -> str:
         'helloHTMLWorld'
     """
     words, *_ = parse_case(text, acronyms)
-    if words:
-        words[0] = words[0].lower()
-    return "".join(words)
+    return _camel(words=words, acronyms=acronyms)
 
 
 def pascal(text: str, acronyms: Optional[List[str]] = None) -> str:
@@ -52,7 +86,7 @@ def snake(text: str, acronyms: Optional[List[str]] = None) -> str:
 
     Args:
         text (str): Input string to be converted
-        acronyms (optional, list of str): List of acronyms to honort
+        acronyms (optional, list of str): List of acronyms to honor
 
     Returns:
         str: Case converted text
@@ -132,7 +166,7 @@ def dot(text: str, acronyms: Optional[List[str]] = None) -> str:
 
 
 def separate_words(text: str, acronyms: Optional[List[str]] = None) -> str:
-    """Return text in "seperate words" style.
+    """Return text in "separate words" style.
 
     Args:
         text (str): Input string to be converted

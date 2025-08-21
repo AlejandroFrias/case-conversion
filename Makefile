@@ -1,0 +1,38 @@
+.DEFAULT_GOAL := help
+VENV = .venv
+DIST = dist
+
+.PHONY: help
+help:
+	@echo "'make test lint' for testing and linting."
+
+.PHONY: lint
+lint: $(VENV)/bin/activate
+	$(VENV)/bin/ruff check
+
+.PHONY: format
+format: $(VENV)/bin/activate
+	$(VENV) ruff check --fix
+
+.PHONY: test
+test: $(VENV)/bin/activate
+	$(VENV)/bin/coverage run -m pytest
+	$(VENV)/bin/coverage report
+
+.PHONY: clean
+clean:
+	rm -rf **/__pycache__
+	rm -rf .venv
+	rm -rf .coverage
+	rm -rf .pytest_cache
+
+.PHONY: build
+build:
+	uv build
+
+.PHONY: upload
+upload:
+	uv run twine check $(DIST)/* && uv run twine upload $(DIST)/*
+
+$(VENV)/bin/activate: pyproject.toml
+	uv sync

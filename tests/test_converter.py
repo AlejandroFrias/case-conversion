@@ -145,8 +145,18 @@ PRESERVE_VALUES_SINGLE = {
         "const": "FOO",
         "default": "foo",
     },
-    "slash": {"camel": "foo", "pascal": "Foo", "const": "FOO", "default": "foo",},
-    "backslash": {"camel": "foo", "pascal": "Foo", "const": "FOO", "default": "foo",},
+    "slash": {
+        "camel": "foo",
+        "pascal": "Foo",
+        "const": "FOO",
+        "default": "foo",
+    },
+    "backslash": {
+        "camel": "foo",
+        "pascal": "Foo",
+        "const": "FOO",
+        "default": "foo",
+    },
 }
 
 PRESERVE_VALUES_SINGLE_UNICODE = {
@@ -156,8 +166,18 @@ PRESERVE_VALUES_SINGLE_UNICODE = {
         "const": "FÓO",
         "default": "fóo",
     },
-    "slash": {"camel": "fóo", "pascal": "Fóo", "const": "FÓO", "default": "fóo",},
-    "backslash": {"camel": "fóo", "pascal": "Fóo", "const": "FÓO", "default": "fóo",},
+    "slash": {
+        "camel": "fóo",
+        "pascal": "Fóo",
+        "const": "FÓO",
+        "default": "fóo",
+    },
+    "backslash": {
+        "camel": "fóo",
+        "pascal": "Fóo",
+        "const": "FÓO",
+        "default": "fóo",
+    },
 }
 
 PRESERVE_VALUES_ACRONYM = {
@@ -210,7 +230,12 @@ PRESERVE_VALUES_ACRONYM_SINGLE = {
         "const": "HTTP",
         "default": "http",
     },
-    "slash": {"camel": "HTTP", "pascal": "HTTP", "const": "HTTP", "default": "http",},
+    "slash": {
+        "camel": "HTTP",
+        "pascal": "HTTP",
+        "const": "HTTP",
+        "default": "http",
+    },
     "backslash": {
         "camel": "HTTP",
         "pascal": "HTTP",
@@ -250,7 +275,7 @@ def _expand_values_preserve(preserve_values, values):
                     case,
                     value,
                     preserve_values[case][name if name in CAPITAL_CASES else "default"],
-                )  # nopep8
+                )
                 for name, value in values.items()
             ]
         )
@@ -267,6 +292,10 @@ class CaseConversionTest(TestCase):
         """
         case_converter = getattr(case_conversion, case)
         self.assertEqual(case_converter(value), expected)
+
+        converter = case_conversion.Converter(text=value)
+        case_converter = getattr(converter, case)
+        self.assertEqual(case_converter(), expected)
 
     @parameterized.expand(_expand_values(VALUES_UNICODE))
     def test_unicode(self, _, case, value, expected):
