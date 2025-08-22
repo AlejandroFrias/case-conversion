@@ -1,8 +1,6 @@
 from dataclasses import dataclass
-from .types import Case
 from .utils import (
     advanced_acronym_detection,
-    determine_case,
     is_upper,
     normalize_word,
     sanitize_acronyms,
@@ -20,7 +18,6 @@ class Word:
 @dataclass
 class ParseData:
     words: list[Word]
-    original_case: Case
     original_separator: str
 
 
@@ -41,12 +38,16 @@ def parse_case(
         str: Determined separator
 
     Examples:
-        >>> parse_case("hello_world")
-        ["Hello", "World"], Case.LOWER, "_"
-        >>> parse_case("helloHTMLWorld", ["HTML"])
-        ["Hello", "HTML", World"], Case.MIXED, None
-        >>> parse_case("helloHtmlWorld", ["HTML"], True)
-        ["Hello", "Html", World"], Case.CAMEL, None
+        >>> data = parse_case("hello_world")
+        >>> [word.normalized_word for word in data.words]
+        ['Hello', 'World']
+        >>> [word.original_word for word in data.words]
+        ['hello', 'world']
+        >>> data = parse_case("helloHTMLWorld", ["HTML"])
+        >>> [word.normalized_word for word in data.words]
+        ['Hello', 'HTML', 'World']
+        >>> [word.original_word for word in data.words]
+        ['hello', 'HTML', 'World']
     """
     words_with_sep, separator = segment_string(string)
 
@@ -77,20 +78,12 @@ def parse_case(
             s = None
         i += 1
 
-    if s is not None:
-        check_acronym(s, i, words_with_sep, acronyms)  # type: ignore
-
     # Separators are no longer needed, so they should be removed.
     words: list[str] = [w for w in words_with_sep if w is not None]
-
-    # Determine case type.
-    case_type = determine_case(words, string)
 
     word_list = [
         Word(original_word=word, normalized_word=normalize_word(word, acronyms))
         for word in words
     ]
 
-    return ParseData(
-        words=word_list, original_case=case_type, original_separator=separator
-    )
+    return ParseData(words=word_list, original_separator=separator)

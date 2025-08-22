@@ -7,20 +7,11 @@ import case_conversion
 ACRONYMS = ["HTTP"]
 ACRONYMS_UNICODE = ["HÉÉP"]
 
-CASES = [
-    "camel",
-    "pascal",
-    "snake",
-    "dash",
-    "const",
-    "dot",
-]
+# These cases do not preserve capitals from the original string
+CASES = ["camel", "pascal", "snake", "dash", "const", "dot", "ada", "http_header"]
 
-CASES_PRESERVE = [
-    "separate_words",
-    "slash",
-    "backslash",
-]
+# These cases preserve the capitals from the original string
+CASES_PRESERVE = ["separate_words", "slash", "backslash"]
 
 VALUES = {
     "camel": "fooBarString",
@@ -32,6 +23,8 @@ VALUES = {
     "separate_words": "foo bar string",
     "slash": "foo/bar/string",
     "backslash": "foo\\bar\\string",
+    "ada": "Foo_Bar_String",
+    "http_header": "Foo-Bar-String",
 }
 
 VALUES_UNICODE = {
@@ -44,6 +37,8 @@ VALUES_UNICODE = {
     "separate_words": "fóo bar string",
     "slash": "fóo/bar/string",
     "backslash": "fóo\\bar\\string",
+    "ada": "Fóo_Bar_String",
+    "http_header": "Fóo-Bar-String",
 }
 
 VALUES_SINGLE = {
@@ -56,6 +51,8 @@ VALUES_SINGLE = {
     "separate_words": "foo",
     "slash": "foo",
     "backslash": "foo",
+    "ada": "Foo",
+    "http_header": "Foo",
 }
 
 VALUES_SINGLE_UNICODE = {
@@ -68,6 +65,8 @@ VALUES_SINGLE_UNICODE = {
     "separate_words": "fóo",
     "slash": "fóo",
     "backslash": "fóo",
+    "ada": "Fóo",
+    "http_header": "Fóo",
 }
 
 VALUES_ACRONYM = {
@@ -80,6 +79,8 @@ VALUES_ACRONYM = {
     "separate_words": "foo http bar string",
     "slash": "foo/http/bar/string",
     "backslash": "foo\\http\\bar\\string",
+    "ada": "Foo_HTTP_Bar_String",
+    "http_header": "Foo-HTTP-Bar-String",
 }
 
 VALUES_ACRONYM_UNICODE = {
@@ -92,6 +93,8 @@ VALUES_ACRONYM_UNICODE = {
     "separate_words": "foo héép bar string",
     "slash": "foo/héép/bar/string",
     "backslash": "foo\\héép\\bar\\string",
+    "ada": "Foo_HÉÉP_Bar_String",
+    "http_header": "Foo-HÉÉP-Bar-String",
 }
 
 PRESERVE_VALUES = {
@@ -99,18 +102,24 @@ PRESERVE_VALUES = {
         "camel": "foo Bar String",
         "pascal": "Foo Bar String",
         "const": "FOO BAR STRING",
+        "ada": "Foo Bar String",
+        "http_header": "Foo Bar String",
         "default": "foo bar string",
     },
     "slash": {
         "camel": "foo/Bar/String",
         "pascal": "Foo/Bar/String",
         "const": "FOO/BAR/STRING",
+        "ada": "Foo/Bar/String",
+        "http_header": "Foo/Bar/String",
         "default": "foo/bar/string",
     },
     "backslash": {
         "camel": "foo\\Bar\\String",
         "pascal": "Foo\\Bar\\String",
         "const": "FOO\\BAR\\STRING",
+        "ada": "Foo\\Bar\\String",
+        "http_header": "Foo\\Bar\\String",
         "default": "foo\\bar\\string",
     },
 }
@@ -120,18 +129,24 @@ PRESERVE_VALUES_UNICODE = {
         "camel": "fóo Bar String",
         "pascal": "Fóo Bar String",
         "const": "FÓO BAR STRING",
+        "ada": "Fóo Bar String",
+        "http_header": "Fóo Bar String",
         "default": "fóo bar string",
     },
     "slash": {
         "camel": "fóo/Bar/String",
         "pascal": "Fóo/Bar/String",
         "const": "FÓO/BAR/STRING",
+        "ada": "Fóo/Bar/String",
+        "http_header": "Fóo/Bar/String",
         "default": "fóo/bar/string",
     },
     "backslash": {
         "camel": "fóo\\Bar\\String",
         "pascal": "Fóo\\Bar\\String",
         "const": "FÓO\\BAR\\STRING",
+        "ada": "Fóo\\Bar\\String",
+        "http_header": "Fóo\\Bar\\String",
         "default": "fóo\\bar\\string",
     },
 }
@@ -141,18 +156,24 @@ PRESERVE_VALUES_SINGLE = {
         "camel": "foo",
         "pascal": "Foo",
         "const": "FOO",
+        "ada": "Foo",
+        "http_header": "Foo",
         "default": "foo",
     },
     "slash": {
         "camel": "foo",
         "pascal": "Foo",
         "const": "FOO",
+        "ada": "Foo",
+        "http_header": "Foo",
         "default": "foo",
     },
     "backslash": {
         "camel": "foo",
         "pascal": "Foo",
         "const": "FOO",
+        "ada": "Foo",
+        "http_header": "Foo",
         "default": "foo",
     },
 }
@@ -162,18 +183,24 @@ PRESERVE_VALUES_SINGLE_UNICODE = {
         "camel": "fóo",
         "pascal": "Fóo",
         "const": "FÓO",
+        "ada": "Fóo",
+        "http_header": "Fóo",
         "default": "fóo",
     },
     "slash": {
         "camel": "fóo",
         "pascal": "Fóo",
         "const": "FÓO",
+        "ada": "Fóo",
+        "http_header": "Fóo",
         "default": "fóo",
     },
     "backslash": {
         "camel": "fóo",
         "pascal": "Fóo",
         "const": "FÓO",
+        "ada": "Fóo",
+        "http_header": "Fóo",
         "default": "fóo",
     },
 }
@@ -183,18 +210,24 @@ PRESERVE_VALUES_ACRONYM = {
         "camel": "foo HTTP Bar String",
         "pascal": "Foo HTTP Bar String",
         "const": "FOO HTTP BAR STRING",
+        "ada": "Foo HTTP Bar String",
+        "http_header": "Foo HTTP Bar String",
         "default": "foo http bar string",
     },
     "slash": {
         "camel": "foo/HTTP/Bar/String",
         "pascal": "Foo/HTTP/Bar/String",
         "const": "FOO/HTTP/BAR/STRING",
+        "ada": "Foo/HTTP/Bar/String",
+        "http_header": "Foo/HTTP/Bar/String",
         "default": "foo/http/bar/string",
     },
     "backslash": {
         "camel": "foo\\HTTP\\Bar\\String",
         "pascal": "Foo\\HTTP\\Bar\\String",
         "const": "FOO\\HTTP\\BAR\\STRING",
+        "ada": "Foo\\HTTP\\Bar\\String",
+        "http_header": "Foo\\HTTP\\Bar\\String",
         "default": "foo\\http\\bar\\string",
     },
 }
@@ -204,18 +237,24 @@ PRESERVE_VALUES_ACRONYM_UNICODE = {
         "camel": "foo HÉÉP Bar String",
         "pascal": "Foo HÉÉP Bar String",
         "const": "FOO HÉÉP BAR STRING",
+        "ada": "Foo HÉÉP Bar String",
+        "http_header": "Foo HÉÉP Bar String",
         "default": "foo héép bar string",
     },
     "slash": {
         "camel": "foo/HÉÉP/Bar/String",
         "pascal": "Foo/HÉÉP/Bar/String",
         "const": "FOO/HÉÉP/BAR/STRING",
+        "ada": "Foo/HÉÉP/Bar/String",
+        "http_header": "Foo/HÉÉP/Bar/String",
         "default": "foo/héép/bar/string",
     },
     "backslash": {
         "camel": "foo\\HÉÉP\\Bar\\String",
         "pascal": "Foo\\HÉÉP\\Bar\\String",
         "const": "FOO\\HÉÉP\\BAR\\STRING",
+        "ada": "Foo\\HÉÉP\\Bar\\String",
+        "http_header": "Foo\\HÉÉP\\Bar\\String",
         "default": "foo\\héép\\bar\\string",
     },
 }
@@ -226,28 +265,29 @@ PRESERVE_VALUES_ACRONYM_SINGLE = {
         "camel": "HTTP",
         "pascal": "HTTP",
         "const": "HTTP",
+        "ada": "HTTP",
+        "http_header": "HTTP",
         "default": "http",
     },
     "slash": {
         "camel": "HTTP",
         "pascal": "HTTP",
         "const": "HTTP",
+        "ada": "HTTP",
+        "http_header": "HTTP",
         "default": "http",
     },
     "backslash": {
         "camel": "HTTP",
         "pascal": "HTTP",
         "const": "HTTP",
+        "ada": "HTTP",
+        "http_header": "HTTP",
         "default": "http",
     },
 }
 
-CAPITAL_CASES = [
-    "camel",
-    "pascal",
-    "const",
-    "const",
-]
+CAPITAL_CASES = ["camel", "pascal", "const", "ada", "http_header"]
 
 
 def _expand_values(values):

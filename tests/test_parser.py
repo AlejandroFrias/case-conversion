@@ -1,6 +1,6 @@
 import pytest
 
-from case_conversion import Case, parse_case
+from case_conversion import parse_case
 from case_conversion.parser import ParseData, Word
 
 
@@ -16,7 +16,6 @@ from case_conversion.parser import ParseData, Word
                     Word(original_word="Bar", normalized_word="Bar"),
                     Word(original_word="Baz", normalized_word="Baz"),
                 ],
-                original_case=Case.CAMEL,
                 original_separator="",
             ),
         ),
@@ -29,7 +28,6 @@ from case_conversion.parser import ParseData, Word
                     Word(original_word="Bar", normalized_word="BAR"),
                     Word(original_word="Baz", normalized_word="Baz"),
                 ],
-                original_case=Case.CAMEL,
                 original_separator="",
             ),
         ),

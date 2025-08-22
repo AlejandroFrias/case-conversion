@@ -1,7 +1,7 @@
 import pytest
 
 import case_conversion.utils as utils
-from case_conversion import Case, InvalidAcronymError
+from case_conversion import InvalidAcronymError
 
 
 @pytest.mark.parametrize(
@@ -88,17 +88,3 @@ def test_sanitize_acronyms_raises_on_invalid_acronyms(acronyms):
 )
 def test_normalize_words(words, acronyms, expected):
     assert utils.normalize_words(words, acronyms) == expected
-
-
-@pytest.mark.parametrize(
-    "words,string,expected",
-    (
-        ([], "", Case.UNKNOWN),
-        (["foobar"], "foobar", Case.LOWER),
-        (["foo", "Bar"], "", Case.CAMEL),
-        (["Foo", "Bar"], "", Case.PASCAL),
-        (["foo", "bar"], "", Case.MIXED),
-    ),
-)
-def test_determine_case(words, string, expected):
-    assert utils.determine_case(words=words, string=string) == expected

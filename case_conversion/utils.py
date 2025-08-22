@@ -1,7 +1,7 @@
 import unicodedata
 from typing import Iterator
 
-from .types import Case, InvalidAcronymError
+from .types import InvalidAcronymError
 
 
 def get_substring_ranges(a_str: str, sub: str) -> Iterator[tuple[int, int]]:
@@ -46,44 +46,6 @@ def is_valid_acronym(a_string: str) -> bool:
             return False
 
     return True
-
-
-def determine_case(words: list[str], string: str) -> Case:
-    """Determine case type of string.
-
-    Arguments:
-        was_all_upper (bool): [description]
-        words (list of str): Segmented input string
-        string (str): Original input string
-
-    Returns:
-        Case: Determined case
-    """
-    case_type = Case.UNKNOWN
-    if string.isupper():
-        case_type = Case.UPPER
-    elif string.islower():
-        case_type = Case.LOWER
-    elif words:
-        camel_case = words[0].islower()
-        pascal_case = words[0].istitle() or words[0].isupper()
-
-        if camel_case or pascal_case:
-            for word in words[1:]:
-                c = word.istitle() or word.isupper()
-                camel_case &= c
-                pascal_case &= c
-                if not c:
-                    break
-
-        if camel_case:
-            case_type = Case.CAMEL
-        elif pascal_case:
-            case_type = Case.PASCAL
-        else:
-            case_type = Case.MIXED
-
-    return case_type
 
 
 def advanced_acronym_detection(

@@ -1,16 +1,34 @@
-from .parser import ParseData, Word, parse_case
+from .parser import ParseData, parse_case
 
 
-####### CLASS STYLE #######
 class Converter:
+    """Class style case converter that holds the core logic.
+
+    This approach can be DRYer than top-level function when using the same acronyms all the time or
+    converting the same text to multiple different cases.
+    But it can be more verbose, so convenience top-level functions are available too
+    that use this class.
+
+    >>> converter = Converter(text="text to convert", acronyms=["HTML"])
+    >>> converter.camel()
+    'textToConvert'
+    >>> converter.pascal()
+    'TextToConvert'
+    >>> Converter().dash("some text to convert")
+    'some-text-to-convert'
+    """
+
     parse_data: ParseData | None
+    text: str | None
     acronyms: list[str]
 
     def __init__(self, text: str | None = None, acronyms: list[str] | None = None):
         if text:
             self.parse_data = parse_case(text, acronyms)
+            self.text = text
         else:
             self.parse_data = None
+            self.text = None
         self.acronyms = acronyms or []
 
     def camel(self, text: str | None = None) -> str:
@@ -28,8 +46,10 @@ class Converter:
             >>> converter.camel()
             'helloWorld'
             >>> converter = Converter(acronyms=["HTML"])
-            >>> converter.camel("HELLO_HTML_WORLD)
+            >>> converter.camel("HELLO_HTML_WORLD")
             'helloHTMLWorld'
+            >>> Converter(text=" ").camel()
+            ''
         """
         if text:
             return Converter(text=text, acronyms=self.acronyms).camel()
@@ -205,7 +225,7 @@ class Converter:
             >>> converter.separate_words()
             'hello HTML World'
             >>> converter.separate_words("A_DIFFERENT_HTML_STRING")
-            'a different html string'
+            'A DIFFERENT HTML STRING'
         """
         if text:
             return Converter(text=text, acronyms=self.acronyms).separate_words()
@@ -232,7 +252,7 @@ class Converter:
             >>> converter = Converter(text="helloHTMLWorld", acronyms=["HTML"])
             >>> converter.slash()
             'hello/HTML/World'
-            >>> converter.separate_words("A_DIFFERENT_HTML_STRING")
+            >>> converter.slash("A_DIFFERENT_HTML_STRING")
             'A/DIFFERENT/HTML/STRING'
         """
         if text:
@@ -256,18 +276,202 @@ class Converter:
         Examples:
             >>> converter = Converter("hello world")
             >>> converter.backslash("hello world")
-            'hello\\world'
+            'hello\\\\world'
             >>> converter = Converter(text="helloHTMLWorld", acronyms=["HTML"])
             >>> converter.backslash()
-            'hello\\HTML\\World'
-            >>> converter.separate_words("A_DIFFERENT_HTML_STRING")
-            'A\\DIFFERENT\\HTML\\STRING'
+            'hello\\\\HTML\\\\World'
+            >>> converter.backslash("A_DIFFERENT_HTML_STRING")
+            'A\\\\DIFFERENT\\\\HTML\\\\STRING'
         """
         if text:
             return Converter(text=text, acronyms=self.acronyms).backslash()
         elif self.parse_data:
             words = self.parse_data.words
             return "\\".join([word.original_word for word in words])
+
+        return ""
+
+    def ada(self, text: str | None = None) -> str:
+        """Return text in Ada_Style.
+
+        Args:
+            text (str): Input string to be converted
+            acronyms (optional, list of str): List of acronyms to honor
+
+        Returns:
+            str: Case converted text
+
+        Examples:
+            >>> converter = Converter("hello world")
+            >>> converter.ada("hello world")
+            'Hello_World'
+            >>> converter = Converter(text="helloHTMLWorld", acronyms=["HTML"])
+            >>> converter.ada()
+            'Hello_HTML_World'
+            >>> converter.ada("A_DIFFERENT_HTML_STRING")
+            'A_Different_HTML_String'
+        """
+        if text:
+            return Converter(text=text, acronyms=self.acronyms).ada()
+        elif self.parse_data:
+            words = self.parse_data.words
+            return "_".join([w.normalized_word for w in words])
+
+        return ""
+
+    def http_header(self, text: str | None = None) -> str:
+        """Return text in Http-Header-Style
+
+        Args:
+            text (str): Input string to be converted
+            acronyms (optional, list of str): List of acronyms to honor
+
+        Returns:
+            str: Case converted text
+
+        Examples:
+            >>> converter = Converter("hello world")
+            >>> converter.http_header("hello world")
+            'Hello-World'
+            >>> converter = Converter(text="helloHTMLWorld", acronyms=["HTML"])
+            >>> converter.http_header()
+            'Hello-HTML-World'
+            >>> converter.http_header("A_DIFFERENT_HTML_STRING")
+            'A-Different-HTML-String'
+        """
+        if text:
+            return Converter(text=text, acronyms=self.acronyms).http_header()
+        elif self.parse_data:
+            words = self.parse_data.words
+            return "-".join([w.normalized_word for w in words])
+
+        return ""
+
+    def lower(self, text: str | None = None) -> str:
+        """Return text in lowercase style.
+
+        This is a convenience function wrapping inbuilt lower().
+        It features the same signature as other conversion functions.
+        Note: Acronyms are not being honored.
+
+        Args:
+            text (str): Input string to be converted
+            args : Placeholder to conform to common signature
+            kwargs : Placeholder to conform to common signature
+
+        Returns:
+            str: Case converted text
+
+        Examples:
+            >>> Converter().lower("HELLO_WORLD")
+            'hello_world'
+            >>> Converter(acronyms=["HTML"]).lower("helloHTMLWorld")
+            'hellohtmlworld'
+            >>> Converter(text="helloHTMLWorld").lower()
+            'hellohtmlworld'
+            >>> Converter().lower()
+            ''
+        """
+        if text:
+            return text.lower()
+        elif self.text:
+            return self.text.lower()
+
+        return ""
+
+    def upper(self, text: str | None = None) -> str:
+        """Return text in UPPERCASE style.
+
+        This is a convenience function wrapping inbuilt upper().
+        It features the same signature as other conversion functions.
+        Note: Acronyms are not being honored.
+
+        Args:
+            text (str): Input string to be converted
+            args : Placeholder to conform to common signature
+            kwargs : Placeholder to conform to common signature
+
+        Returns:
+            str: Case converted text
+
+        Examples:
+            >>> Converter().upper("hello_world")
+            'HELLO_WORLD'
+            >>> Converter(acronyms=["HTML"]).upper("helloHTMLWorld")
+            'HELLOHTMLWORLD'
+            >>> Converter(text="helloHTMLWorld", acronyms=["HTML"]).upper()
+            'HELLOHTMLWORLD'
+            >>> Converter().upper()
+            ''
+        """
+        if text:
+            return text.upper()
+        elif self.text:
+            return self.text.upper()
+
+        return ""
+
+    def title(self, text: str | None = None) -> str:
+        """Return text in Titlecase style.
+
+        This is a convenience function wrapping inbuilt title().
+        It features the same signature as other conversion functions.
+        Note: Acronyms are not being honored.
+
+        Args:
+            text (str): Input string to be converted
+            args : Placeholder to conform to common signature
+            kwargs : Placeholder to conform to common signature
+
+        Returns:
+            str: Case converted text
+
+        Examples:
+            >>> Converter().title("hello_world")
+            'Hello_World'
+            >>> Converter(acronyms=["HTML"]).title("helloHTMLWorld")
+            'Hellohtmlworld'
+            >>> Converter(text="helloHTMLWorld", acronyms=["HTML"]).title()
+            'Hellohtmlworld'
+            >>> Converter().title()
+            ''
+        """
+        if text:
+            return text.title()
+        elif self.text:
+            return self.text.title()
+
+        return ""
+
+    def capitalize(self, text: str | None = None) -> str:
+        """Return text in Capital case style.
+
+        This is a convenience function wrapping inbuilt title().
+        It features the same signature as other conversion functions.
+        Note: Acronyms are not being honored.
+
+        Args:
+            text (str): Input string to be converted
+            args : Placeholder to conform to common signature
+            kwargs : Placeholder to conform to common signature
+
+        Returns:
+            str: Case converted text
+
+        Examples:
+            >>> Converter().capitalize("hello_world")
+            'Hello_world'
+            >>> Converter(acronyms=["HTML"]).capitalize("helloHTMLWorld")
+            'Hellohtmlworld'
+            >>> Converter(text="a sentence to capitalize", acronyms=["HTML"]).capitalize()
+            'A sentence to capitalize'
+            >>> Converter().capitalize()
+            ''
+        """
+        if text:
+            return text.capitalize()
+        elif self.text:
+            return self.text.capitalize()
 
         return ""
 
@@ -445,9 +649,9 @@ def backslash(text: str, acronyms: list[str] | None = None) -> str:
 
     Examples:
         >>> backslash("HELLO_WORLD")
-        r'HELLO\WORLD'
+        'HELLO\\WORLD'
         >>> backslash("helloHTMLWorld", ["HTML"])
-        r'hello\HTML\World'
+        'hello\\HTML\\World'
     """
     return Converter(text=text, acronyms=acronyms).backslash()
 
@@ -466,12 +670,11 @@ def ada(text: str, acronyms: list[str] | None = None) -> str:
 
     Examples:
         >>> ada("hello_world")
-        Hello_World
+        'Hello_World'
         >>> ada("helloHTMLWorld", ["HTML"])
-        Hello_HTML_World
+        'Hello_HTML_World'
     """
-    parse_data = parse_case(text, acronyms)
-    return "_".join([w.normalized_word for w in parse_data.words])
+    return Converter(text=text, acronyms=acronyms).ada()
 
 
 def http_header(text: str, acronyms: list[str] | None = None) -> str:
@@ -486,12 +689,11 @@ def http_header(text: str, acronyms: list[str] | None = None) -> str:
 
     Examples:
         >>> http_header("hello_world")
-        Hello-World
+        'Hello-World'
         >>> http_header("helloHTMLWorld", ["HTML"])
-        Hello-HTML-World
+        'Hello-HTML-World'
     """
-    parse_data = parse_case(text, acronyms)
-    return "-".join([w.normalized_word for w in parse_data.words])
+    return Converter(text=text, acronyms=acronyms).http_header()
 
 
 def lower(text: str, *args, **kwargs) -> str:
@@ -511,9 +713,9 @@ def lower(text: str, *args, **kwargs) -> str:
 
     Examples:
         >>> lower("HELLO_WORLD")
-        hello_world
+        'hello_world'
         >>> lower("helloHTMLWorld", ["HTML"])
-        hello_html_world
+        'hellohtmlworld'
     """
     # TODO: add docstring tests
     return text.lower()
@@ -536,15 +738,15 @@ def upper(text: str, *args, **kwargs) -> str:
 
     Examples:
         >>> upper("hello_world")
-        HELLO_WORLD
+        'HELLO_WORLD'
         >>> upper("helloHTMLWorld", ["HTML"])
-        HELLOHTMLWORLD
+        'HELLOHTMLWORLD'
     """
     return text.upper()
 
 
 def title(text: str, *args, **kwargs) -> str:
-    """Return text in Title_case style.
+    """Return text in Title Case style.
 
     This is a convenience function wrapping inbuilt title().
     It features the same signature as other conversion functions.
@@ -560,14 +762,14 @@ def title(text: str, *args, **kwargs) -> str:
 
     Examples:
         >>> title("hello_world")
-        Hello_world
+        'Hello_World'
         >>> title("helloHTMLWorld", ["HTML"])
-        HelloHTMLWorld
+        'Hellohtmlworld'
     """
     return text.title()
 
 
-def capital(text: str, *args, **kwargs) -> str:
+def capitalize(text: str, *args, **kwargs) -> str:
     """Return text in Capital case style.
 
     This is a convenience function wrapping inbuilt capitalize().
@@ -583,9 +785,9 @@ def capital(text: str, *args, **kwargs) -> str:
         str: Case converted text
 
     Examples:
-        >>> capital("hello_world")
-        Hello_world
-        >>> capital("helloHTMLWorld", ["HTML"])
-        HelloHTMLWorld
+        >>> capitalize("hello_world")
+        'Hello_world'
+        >>> capitalize("helloHTMLWorld", ["HTML"])
+        'Hellohtmlworld'
     """
     return text.capitalize()

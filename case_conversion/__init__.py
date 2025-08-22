@@ -12,7 +12,7 @@ from .converter import (
     title,
     lower,
     upper,
-    capital,
+    capitalize,
     http_header,
     Converter,
 )
@@ -33,7 +33,7 @@ __all__ = [
     "title",
     "lower",
     "upper",
-    "capital",
+    "capitalize",
     "http_header",
     "parse_case",
     "Case",

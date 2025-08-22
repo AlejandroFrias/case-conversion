@@ -6,13 +6,16 @@ DIST = dist
 help:
 	@echo "'make test lint' for testing and linting."
 
+$(VENV)/bin/activate: pyproject.toml
+	uv sync
+
 .PHONY: lint
 lint: $(VENV)/bin/activate
 	$(VENV)/bin/ruff check
 
 .PHONY: format
 format: $(VENV)/bin/activate
-	$(VENV) ruff check --fix
+	$(VENV)/bin/ruff check --fix
 
 .PHONY: test
 test: $(VENV)/bin/activate
@@ -33,6 +36,3 @@ build:
 .PHONY: upload
 upload:
 	uv run twine check $(DIST)/* && uv run twine upload $(DIST)/*
-
-$(VENV)/bin/activate: pyproject.toml
-	uv sync
