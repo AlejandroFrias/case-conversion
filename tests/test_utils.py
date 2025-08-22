@@ -7,17 +7,17 @@ from case_conversion import Case, InvalidAcronymError
 @pytest.mark.parametrize(
     "string,expected",
     (
-        ("fooBarString", (["foo", "Bar", "String"], "", False)),
-        ("FooBarString", (["Foo", "Bar", "String"], "", False)),
-        ("foo_bar_string", (["foo", None, "bar", None, "string"], "_", False)),
-        ("foo-bar-string", (["foo", None, "bar", None, "string"], "-", False)),
-        ("FOO_BAR_STRING", (["foo", None, "bar", None, "string"], "_", True)),
-        ("foo.bar.string", (["foo", None, "bar", None, "string"], ".", False)),
-        ("foo bar string", (["foo", None, "bar", None, "string"], " ", False)),
-        ("foo/bar/string", (["foo", None, "bar", None, "string"], "/", False)),
-        ("foo\\bar\\string", (["foo", None, "bar", None, "string"], "\\", False)),
-        ("foobarstring", (["foobarstring"], "", False)),
-        ("FOOBARSTRING", (["foobarstring"], "", True)),
+        ("fooBarString", (["foo", "Bar", "String"], "")),
+        ("FooBarString", (["Foo", "Bar", "String"], "")),
+        ("foo_bar_string", (["foo", None, "bar", None, "string"], "_")),
+        ("foo-bar-string", (["foo", None, "bar", None, "string"], "-")),
+        ("FOO_BAR_STRING", (["FOO", None, "BAR", None, "STRING"], "_")),
+        ("foo.bar.string", (["foo", None, "bar", None, "string"], ".")),
+        ("foo bar string", (["foo", None, "bar", None, "string"], " ")),
+        ("foo/bar/string", (["foo", None, "bar", None, "string"], "/")),
+        ("foo\\bar\\string", (["foo", None, "bar", None, "string"], "\\")),
+        ("foobarstring", (["foobarstring"], "")),
+        ("FOOBARSTRING", (["FOOBARSTRING"], "")),
     ),
 )
 def test_segment_string(string, expected):
@@ -91,15 +91,14 @@ def test_normalize_words(words, acronyms, expected):
 
 
 @pytest.mark.parametrize(
-    "was_upper,words,string,expected",
+    "words,string,expected",
     (
-        (False, [], "", Case.UNKNOWN),
-        (True, [], "", Case.UPPER),
-        (False, [], "foobar", Case.LOWER),
-        (False, ["foo", "Bar"], "", Case.CAMEL),
-        (False, ["Foo", "Bar"], "", Case.PASCAL),
-        (False, ["foo", "bar"], "", Case.MIXED),
+        ([], "", Case.UNKNOWN),
+        (["foobar"], "foobar", Case.LOWER),
+        (["foo", "Bar"], "", Case.CAMEL),
+        (["Foo", "Bar"], "", Case.PASCAL),
+        (["foo", "bar"], "", Case.MIXED),
     ),
 )
-def test_determine_case(was_upper, words, string, expected):
-    assert utils.determine_case(was_upper, words, string) == expected
+def test_determine_case(words, string, expected):
+    assert utils.determine_case(words=words, string=string) == expected

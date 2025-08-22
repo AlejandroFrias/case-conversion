@@ -48,16 +48,16 @@ def parse_case(
         >>> parse_case("helloHtmlWorld", ["HTML"], True)
         ["Hello", "Html", World"], Case.CAMEL, None
     """
-    words_with_sep, separator, was_upper = segment_string(string)
+    words_with_sep, separator = segment_string(string)
 
     if acronyms:
         # Use advanced acronym detection with list
         acronyms = sanitize_acronyms(acronyms)
-        check_acronym = advanced_acronym_detection  # type: ignore
+        check_acronym = advanced_acronym_detection
     else:
         acronyms = []
         # Fallback to simple acronym detection.
-        check_acronym = simple_acronym_detection  # type: ignore
+        check_acronym = simple_acronym_detection
 
     # Letter-run detector
 
@@ -77,11 +77,14 @@ def parse_case(
             s = None
         i += 1
 
+    if s is not None:
+        check_acronym(s, i, words_with_sep, acronyms)  # type: ignore
+
     # Separators are no longer needed, so they should be removed.
     words: list[str] = [w for w in words_with_sep if w is not None]
 
     # Determine case type.
-    case_type = determine_case(was_upper, words, string)
+    case_type = determine_case(words, string)
 
     word_list = [
         Word(original_word=word, normalized_word=normalize_word(word, acronyms))

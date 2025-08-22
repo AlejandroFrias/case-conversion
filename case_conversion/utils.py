@@ -48,7 +48,7 @@ def is_valid_acronym(a_string: str) -> bool:
     return True
 
 
-def determine_case(was_all_upper: bool, words: list[str], string: str) -> Case:
+def determine_case(words: list[str], string: str) -> Case:
     """Determine case type of string.
 
     Arguments:
@@ -60,7 +60,7 @@ def determine_case(was_all_upper: bool, words: list[str], string: str) -> Case:
         Case: Determined case
     """
     case_type = Case.UNKNOWN
-    if was_all_upper:
+    if string.isupper():
         case_type = Case.UPPER
     elif string.islower():
         case_type = Case.LOWER
@@ -189,9 +189,7 @@ def sanitize_acronyms(unsafe_acronyms: list[str]) -> list[str]:
 
 def normalize_word(word: str, acronyms: list[str]) -> str:
     """normalize word to capitalized or all caps for acronyms"""
-    if word.isupper():
-        return word.upper()
-    elif word.upper() in acronyms:
+    if word.upper() in acronyms:
         return word.upper()
     else:
         return word.capitalize()
@@ -210,7 +208,7 @@ def normalize_words(words: list[str], acronyms: list[str]) -> list[str]:
     return [normalize_word(word, acronyms) for word in words]
 
 
-def segment_string(string: str) -> tuple[list[str | None], str, bool]:
+def segment_string(string: str) -> tuple[list[str | None], str]:
     """Segment string on separator into list of words.
 
     Arguments:
@@ -219,7 +217,6 @@ def segment_string(string: str) -> tuple[list[str | None], str, bool]:
     Returns:
         optional, list of str: List of words the string got minced to
         separator: The separator char intersecting words
-        bool: Whether the string was upper-case
     """
     words: list[str | None] = []
     separator = ""
@@ -279,4 +276,6 @@ def segment_string(string: str) -> tuple[list[str | None], str, bool]:
         curr_i += 1
         prev_i = char
 
-    return words, separator, was_upper
+    if was_upper:
+        words = [word.upper() if word else None for word in words]
+    return words, separator
