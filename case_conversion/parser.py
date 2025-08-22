@@ -1,20 +1,33 @@
+from dataclasses import dataclass
 from .types import Case
 from .utils import (
     advanced_acronym_detection,
     determine_case,
     is_upper,
-    normalize_words,
+    normalize_word,
     sanitize_acronyms,
     segment_string,
     simple_acronym_detection,
 )
 
 
+@dataclass
+class Word:
+    original_word: str
+    normalized_word: str
+
+
+@dataclass
+class ParseData:
+    words: list[Word]
+    original_case: Case
+    original_separator: str
+
+
 def parse_case(
     string: str,
     acronyms: list[str] | None = None,
-    preserve_case: bool = False,
-) -> tuple[list[str], Case, str]:
+) -> ParseData:
     """Split a string into words, determine its case and separator.
 
     Args:
@@ -70,10 +83,11 @@ def parse_case(
     # Determine case type.
     case_type = determine_case(was_upper, words, string)
 
-    if preserve_case:
-        if was_upper:
-            words = [w.upper() for w in words]
-    else:
-        words = normalize_words(words, acronyms)
+    word_list = [
+        Word(original_word=word, normalized_word=normalize_word(word, acronyms))
+        for word in words
+    ]
 
-    return words, case_type, separator
+    return ParseData(
+        words=word_list, original_case=case_type, original_separator=separator
+    )
