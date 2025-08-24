@@ -17,6 +17,10 @@ lint: $(VENV)/bin/activate
 format: $(VENV)/bin/activate
 	$(VENV)/bin/ruff check --fix
 
+.PHONY: tc
+tc: $(VENV)/bin/activate
+	$(VENV)/bin/ty check
+
 .PHONY: test
 test: $(VENV)/bin/activate
 	$(VENV)/bin/coverage run -m pytest
