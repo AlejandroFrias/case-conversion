@@ -9,6 +9,10 @@ help:
 $(VENV)/bin/activate: pyproject.toml
 	uv sync
 
+.PHONY: setup
+setup:
+	uv sync
+
 .PHONY: lint
 lint: $(VENV)/bin/activate
 	$(VENV)/bin/ruff check
