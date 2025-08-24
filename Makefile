@@ -23,8 +23,7 @@ tc: $(VENV)/bin/activate
 
 .PHONY: test
 test: $(VENV)/bin/activate
-	$(VENV)/bin/coverage run -m pytest
-	$(VENV)/bin/coverage report
+	$(VENV)/bin/coverage run -m pytest && $(VENV)/bin/coverage report
 
 .PHONY: clean
 clean:
