@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - master
 
 jobs:
   update-badges:
@@ -10,6 +11,11 @@ jobs:
     steps:
       - uses: ./.github/workflows/setup
       - name: create coverage badge
+        run: make test coverage-badge
+      - name: commit and push to gh-pages
         run: |
-          make test
-          make coverage-badge
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add .
+          git commit -m "Update badges"
+          git push --force origin gh-pages
