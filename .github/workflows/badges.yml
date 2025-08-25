@@ -3,10 +3,9 @@ on:
   push:
     branches:
       - main
-      - master
 
 jobs:
-  update-badges:
+  badges:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -26,5 +25,5 @@ jobs:
         git config --global user.name "GitHub Actions"
         git config --global user.email "actions@github.com"
         git add .
-        git commit -m "Update badges"
+        git commit --allow-empty -m "Update badges"
         git push --force origin gh-pages
