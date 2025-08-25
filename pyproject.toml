@@ -29,6 +29,7 @@ Source = "https://github.com/AlejandroFrias/case-conversion"
 
 [dependency-groups]
 dev = [
+    "coverage-badge>=1.1.2",
     "parameterized>=0.9.0",
     "pytest>=8.4.1",
     "pytest-cov>=6.2.1",

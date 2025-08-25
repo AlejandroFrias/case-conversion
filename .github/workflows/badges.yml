@@ -1,0 +1,15 @@
+name: badges
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-badges:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./.github/workflows/setup
+      - name: create coverage badge
+        run: |
+          make test
+          make coverage-badge
