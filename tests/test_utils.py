@@ -1,23 +1,23 @@
 import pytest
 
 import case_conversion.utils as utils
-from case_conversion import Case, InvalidAcronymError
+from case_conversion import InvalidAcronymError
 
 
 @pytest.mark.parametrize(
     "string,expected",
     (
-        ("fooBarString", (["foo", "Bar", "String"], "", False)),
-        ("FooBarString", (["Foo", "Bar", "String"], "", False)),
-        ("foo_bar_string", (["foo", None, "bar", None, "string"], "_", False)),
-        ("foo-bar-string", (["foo", None, "bar", None, "string"], "-", False)),
-        ("FOO_BAR_STRING", (["foo", None, "bar", None, "string"], "_", True)),
-        ("foo.bar.string", (["foo", None, "bar", None, "string"], ".", False)),
-        ("foo bar string", (["foo", None, "bar", None, "string"], " ", False)),
-        ("foo/bar/string", (["foo", None, "bar", None, "string"], "/", False)),
-        ("foo\\bar\\string", (["foo", None, "bar", None, "string"], "\\", False)),
-        ("foobarstring", (["foobarstring"], "", False)),
-        ("FOOBARSTRING", (["foobarstring"], "", True)),
+        ("fooBarString", (["foo", "Bar", "String"], "")),
+        ("FooBarString", (["Foo", "Bar", "String"], "")),
+        ("foo_bar_string", (["foo", None, "bar", None, "string"], "_")),
+        ("foo-bar-string", (["foo", None, "bar", None, "string"], "-")),
+        ("FOO_BAR_STRING", (["FOO", None, "BAR", None, "STRING"], "_")),
+        ("foo.bar.string", (["foo", None, "bar", None, "string"], ".")),
+        ("foo bar string", (["foo", None, "bar", None, "string"], " ")),
+        ("foo/bar/string", (["foo", None, "bar", None, "string"], "/")),
+        ("foo\\bar\\string", (["foo", None, "bar", None, "string"], "\\")),
+        ("foobarstring", (["foobarstring"], "")),
+        ("FOOBARSTRING", (["FOOBARSTRING"], "")),
     ),
 )
 def test_segment_string(string, expected):
@@ -28,9 +28,18 @@ def test_segment_string(string, expected):
     "acronyms,expected",
     (
         (("http",), ["HTTP"]),
-        (("HTTP",), ["HTTP"],),
-        (("Http",), ["HTTP"],),
-        (("httP",), ["HTTP"],),
+        (
+            ("HTTP",),
+            ["HTTP"],
+        ),
+        (
+            ("Http",),
+            ["HTTP"],
+        ),
+        (
+            ("httP",),
+            ["HTTP"],
+        ),
         (("http", "Nasa"), ["HTTP", "NASA"]),
     ),
 )
@@ -79,18 +88,3 @@ def test_sanitize_acronyms_raises_on_invalid_acronyms(acronyms):
 )
 def test_normalize_words(words, acronyms, expected):
     assert utils.normalize_words(words, acronyms) == expected
-
-
-@pytest.mark.parametrize(
-    "was_upper,words,string,expected",
-    (
-        (False, [], "", Case.UNKOWN),
-        (True, [], "", Case.UPPER),
-        (False, [], "foobar", Case.LOWER),
-        (False, ["foo", "Bar"], "", Case.CAMEL),
-        (False, ["Foo", "Bar"], "", Case.PASCAL),
-        (False, ["foo", "bar"], "", Case.MIXED),
-    ),
-)
-def test_determine_case(was_upper, words, string, expected):
-    assert utils.determine_case(was_upper, words, string) == expected

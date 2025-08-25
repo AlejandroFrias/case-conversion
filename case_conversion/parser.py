@@ -1,21 +1,31 @@
-from typing import List, Optional, Tuple
-
-from .types import Case
+from dataclasses import dataclass
 from .utils import (
     advanced_acronym_detection,
-    determine_case,
     is_upper,
-    normalize_words,
+    normalize_word,
     sanitize_acronyms,
     segment_string,
     simple_acronym_detection,
 )
 
 
+@dataclass
+class Word:
+    original_word: str
+    normalized_word: str
+
+
+@dataclass
+class ParseData:
+    words: list[Word]
+    original_separator: str
+
+
 def parse_case(
-    string: str, acronyms: Optional[List[str]] = None, preserve_case: bool = False,
-) -> Tuple[List[str], Case, str]:
-    """Split a string into words, determine its case and seperator.
+    string: str,
+    acronyms: list[str] | None = None,
+) -> ParseData:
+    """Split a string into words, determine its case and separator.
 
     Args:
         string (str): Input string to be converted
@@ -25,26 +35,30 @@ def parse_case(
     Returns:
         list of str: Segmented input string
         Case: Determined case
-        str: Determined seperator
+        str: Determined separator
 
     Examples:
-        >>> parse_case("hello_world")
-        ["Hello", "World"], Case.LOWER, "_"
-        >>> parse_case("helloHTMLWorld", ["HTML"])
-        ["Hello", "HTML", World"], Case.MIXED, None
-        >>> parse_case("helloHtmlWorld", ["HTML"], True)
-        ["Hello", "Html", World"], Case.CAMEL, None
+        >>> data = parse_case("hello_world")
+        >>> [word.normalized_word for word in data.words]
+        ['Hello', 'World']
+        >>> [word.original_word for word in data.words]
+        ['hello', 'world']
+        >>> data = parse_case("helloHTMLWorld", ["HTML"])
+        >>> [word.normalized_word for word in data.words]
+        ['Hello', 'HTML', 'World']
+        >>> [word.original_word for word in data.words]
+        ['hello', 'HTML', 'World']
     """
-    words_with_sep, separator, was_upper = segment_string(string)
+    words_with_sep, separator = segment_string(string)
 
     if acronyms:
         # Use advanced acronym detection with list
         acronyms = sanitize_acronyms(acronyms)
-        check_acronym = advanced_acronym_detection  # type: ignore
+        check_acronym = advanced_acronym_detection
     else:
         acronyms = []
         # Fallback to simple acronym detection.
-        check_acronym = simple_acronym_detection  # type: ignore
+        check_acronym = simple_acronym_detection
 
     # Letter-run detector
 
@@ -65,15 +79,11 @@ def parse_case(
         i += 1
 
     # Separators are no longer needed, so they should be removed.
-    words: List[str] = [w for w in words_with_sep if w is not None]
+    words: list[str] = [w for w in words_with_sep if w is not None]
 
-    # Determine case type.
-    case_type = determine_case(was_upper, words, string)
+    word_list = [
+        Word(original_word=word, normalized_word=normalize_word(word, acronyms))
+        for word in words
+    ]
 
-    if preserve_case:
-        if was_upper:
-            words = [w.upper() for w in words]
-    else:
-        words = normalize_words(words, acronyms)
-
-    return words, case_type, separator
+    return ParseData(words=word_list, original_separator=separator)

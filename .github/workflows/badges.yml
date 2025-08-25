@@ -1,0 +1,29 @@
+name: badges
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  update-badges:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.13
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
+    - name: install dependencies
+      run: |
+        pip install uv
+        make setup
+    - name: create coverage badge
+      run: make test coverage-badge
+    - name: commit and push to gh-pages
+      run: |
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
+        git add .
+        git commit -m "Update badges"
+        git push --force origin gh-pages

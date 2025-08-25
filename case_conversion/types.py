@@ -24,7 +24,7 @@ class Case(Enum):
          are no separators.
     """
 
-    UNKOWN = auto()
+    UNKNOWN = auto()
     UPPER = auto()
     LOWER = auto()
     CAMEL = auto()

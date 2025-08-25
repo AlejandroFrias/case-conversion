@@ -1,10 +1,11 @@
 ![](https://github.com/AlejandroFrias/case-conversion/workflows/CI/badge.svg)
 ![](https://img.shields.io/pypi/pyversions/case_conversion)
 ![](https://img.shields.io/pypi/v/case_conversion)
+![](coverage.svg)
 
 # Case Conversion
 
-This is a port of the Sublime Text 3 plugin [CaseConversion](https://github.com/jdc0589/CaseConversion), by [Davis Clark's](https://github.com/jdc0589), to a regular python package. I couldn't find any other python packages on PyPI at the time (Feb 2016) that could seamlessly convert from any case to any other case without having to specify from what type of case I was converting. This plugin worked really well, so I separated the (non-sublime) python parts of the plugin into this useful python package. I also added Unicode support via python's `unicodedata`. 
+This is a port of the Sublime Text 3 plugin [CaseConversion](https://github.com/jdc0589/CaseConversion), by [Davis Clark's](https://github.com/jdc0589), to a regular python package. I couldn't find any other python packages on PyPI at the time (Feb 2016) that could seamlessly convert from any case to any other case without having to specify from what type of case I was converting. This plugin worked really well, so I separated the (non-sublime) python parts of the plugin into this useful python package. I also added Unicode support via python's `unicodedata`.
 
 ## Features
 

@@ -1,4 +1,3 @@
-# flake8: noqa
 from .converter import (
     camel,
     pascal,
@@ -13,8 +12,31 @@ from .converter import (
     title,
     lower,
     upper,
-    capital,
+    capitalize,
     http_header,
+    Converter,
 )
 from .parser import parse_case
 from .types import Case, InvalidAcronymError
+
+__all__ = [
+    "camel",
+    "pascal",
+    "snake",
+    "dash",
+    "const",
+    "dot",
+    "separate_words",
+    "slash",
+    "backslash",
+    "ada",
+    "title",
+    "lower",
+    "upper",
+    "capitalize",
+    "http_header",
+    "parse_case",
+    "Case",
+    "InvalidAcronymError",
+    "Converter",
+]
