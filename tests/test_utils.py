@@ -47,6 +47,11 @@ def test_sanitize_acronyms(acronyms, expected):
     assert utils.sanitize_acronyms(acronyms) == expected
 
 
+def test_sanitize_acronyms_invalid():
+    with pytest.raises(InvalidAcronymError):
+        utils.sanitize_acronyms(["HTTP", ""])
+
+
 @pytest.mark.parametrize(
     "s,i,words,expected",
     (
@@ -65,6 +70,7 @@ def test_simple_acronym_detection(s, i, words, expected):
         # TODO: Add more cases
         (0, 1, ["FOO", "bar"], ("FOO",), 0),
         (0, 1, ["FOO", "bar"], ("BAR",), 2),
+        (0, 1, ["FOFOO"], ("FO", "FOO"), 2),
     ),
 )
 def test_advanced_acronym_detection(s, i, words, acronyms, expected):
