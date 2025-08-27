@@ -28,6 +28,9 @@ Issues = "https://github.com/AlejandroFrias/case-conversion/issues"
 Source = "https://github.com/AlejandroFrias/case-conversion"
 
 [dependency-groups]
+build = [
+    "twine>=6.1.0",
+]
 dev = [
     "coverage-badge>=1.1.2",
     "parameterized>=0.9.0",
