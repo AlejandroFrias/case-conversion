@@ -1,13 +1,18 @@
-"""Source: https://code.activestate.com/recipes/577659-decorators-for-adding-aliases-to-methods-in-a-clas/"""
+""""""
 
 
 class alias:
-    """
-    Alias class that can be used as a decorator for making methods callable
+    """Alias class that can be used as a decorator for making methods callable
     through other names (or "aliases").
+
+    Source: https://code.activestate.com/recipes/577659-decorators-for-adding-aliases-to-methods-in-a-clas/
+
     Note: This decorator must be used inside an @aliased -decorated class.
     For example, if you want to make the method shout() be also callable as
     yell() and scream(), you can use alias like this:
+
+    @aliased
+    class Person:
 
         @alias('yell', 'scream')
         def shout(message):

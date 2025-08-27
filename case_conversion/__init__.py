@@ -1,9 +1,11 @@
 from case_conversion.converter import (
     camel,
     pascal,
+    mixed,
     snake,
     dash,
     const,
+    screaming_snake,
     dot,
     separate_words,
     slash,
@@ -22,9 +24,11 @@ from case_conversion.acronym import InvalidAcronymError
 __all__ = [
     "camel",
     "pascal",
+    "mixed",
     "snake",
     "dash",
     "const",
+    "screaming_snake",
     "dot",
     "separate_words",
     "slash",

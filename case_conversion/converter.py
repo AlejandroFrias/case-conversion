@@ -146,6 +146,7 @@ class Converter:
 
         return ""
 
+    @alias("screaming_snake")
     def const(self, text: str | None = None) -> str:
         """Return text in CONST_CASE style.
 
@@ -509,6 +510,9 @@ def pascal(text: str, acronyms: list[str] | None = None) -> str:
     return Converter(text=text, acronyms=acronyms).pascal()
 
 
+mixed = pascal
+
+
 def snake(text: str, acronyms: list[str] | None = None) -> str:
     """Return text in snake_case style.
 
@@ -568,6 +572,9 @@ def const(text: str, acronyms: list[str] | None = None) -> str:
         'HELLO_HTML_WORLD'
     """
     return Converter(text=text, acronyms=acronyms).const()
+
+
+screaming_snake = const
 
 
 def dot(text: str, acronyms: list[str] | None = None) -> str:
