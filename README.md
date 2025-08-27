@@ -9,7 +9,7 @@ This is a port of the Sublime Text 3 plugin [CaseConversion](https://github.com/
 
 ## Features
 
-- Autodetection of case *(no need to specify explicitly which case you are converting from!)*
+- Auto-detection of case *(no need to specify explicitly which case you are converting from!)*
 - Acronym detection *(no funky splitting on every capital letter of an all caps acronym like `HTTPError`!)*
 - Unicode supported (non-ASCII characters are first class citizens!)
 - Dependency free!
@@ -26,6 +26,7 @@ This is a port of the Sublime Text 3 plugin [CaseConversion](https://github.com/
   - `backslash\\case`
   - `Ada_Case`
   - `Http-Header-Case`
+  - `
 
 ## Usage
 
@@ -129,4 +130,4 @@ Further thanks and credit to [@olsonpm](https://github.com/olsonpm) for making t
 
 ## License
 
-Using [MIT licence](LICENSE.txt) with Davis Clark's Copyright
+Using [MIT license](LICENSE.txt) with Davis Clark's Copyright

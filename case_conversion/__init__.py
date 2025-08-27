@@ -1,4 +1,4 @@
-from .converter import (
+from case_conversion.converter import (
     camel,
     pascal,
     snake,
@@ -16,8 +16,8 @@ from .converter import (
     http_header,
     Converter,
 )
-from .parser import parse_case
-from .types import Case, InvalidAcronymError
+from case_conversion.parser import parse_into_words
+from case_conversion.acronym import InvalidAcronymError
 
 __all__ = [
     "camel",
@@ -35,8 +35,7 @@ __all__ = [
     "upper",
     "capitalize",
     "http_header",
-    "parse_case",
-    "Case",
+    "parse_into_words",
     "InvalidAcronymError",
     "Converter",
 ]
