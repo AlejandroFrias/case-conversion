@@ -123,7 +123,7 @@ def parse_into_words(
         >>> [word.original_word for word in words]
         ['hello', 'HTML', 'World']
     """
-    words_with_sep = segment_string(string)
+    words_with_sep = segment_string(string.strip())
 
     if acronyms:
         # Use advanced acronym detection with list
@@ -142,6 +142,7 @@ def parse_into_words(
     s = None
 
     # Find runs of single upper-case letters.
+    word = None
     while i < len(words_with_sep):
         word = words_with_sep[i]
         if word is not None and is_upper_char(word):
@@ -151,6 +152,14 @@ def parse_into_words(
             i = check_acronym(s, i, words_with_sep, acronyms) + 1
             s = None
         i += 1
+
+    if s is not None:
+        check_acronym(s, i, words_with_sep, acronyms)
+
+    # Handle case where the entire string is all caps with no separators,
+    # but there are possibly acronyms to detect within it.
+    if len(words_with_sep) == 1:
+        check_acronym(0, 1, words_with_sep, acronyms)
 
     # Separators are no longer needed, so they should be removed.
     words: list[str] = [w for w in words_with_sep if w is not None]

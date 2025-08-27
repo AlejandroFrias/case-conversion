@@ -119,6 +119,7 @@ class Converter:
 
         return ""
 
+    @alias("kebab", "spinal", "slug")
     def dash(self, text: str | None = None) -> str:
         """Return text in dash-case style.
 
@@ -551,6 +552,11 @@ def dash(text: str, acronyms: list[str] | None = None) -> str:
         'hello-html-world'
     """
     return Converter(text=text, acronyms=acronyms).dash()
+
+
+kebab = dash
+spinal = dash
+slug = dash
 
 
 def const(text: str, acronyms: list[str] | None = None) -> str:

@@ -37,13 +37,13 @@ def advanced_acronym_detection(
     """Detect acronyms by checking against a list of acronyms.
 
     Arguments:
-        s (int): Index of first letter in run
+        s (int): Index of first word in run
         i (int): Index of current word
         words (list of str): Segmented input string
         acronyms (list of str): List of acronyms
 
     Returns:
-        int: Index of last letter in run
+        int: Index of last word in run
     """
     # Combine each letter into single string.
     words_to_join = words[s:i]
@@ -68,8 +68,16 @@ def advanced_acronym_detection(
                     not_range.remove(j)
 
     # Add remaining letters as ranges.
-    for nr in not_range:
-        range_list.append((nr, nr + 1))
+    if not_range:
+        not_range = sorted(not_range)
+        start_nr = not_range[0] if not_range else -1
+        prev_nr = start_nr - 1
+        for nr in sorted(not_range):
+            if nr > prev_nr + 1:
+                range_list.append((start_nr, prev_nr + 1))
+                start_nr = nr
+            prev_nr = nr
+        range_list.append((start_nr, prev_nr + 1))
 
     # No ranges will overlap, so it's safe to sort by lower bound,
     # which sort() will do by default.

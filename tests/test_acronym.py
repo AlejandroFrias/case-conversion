@@ -6,6 +6,7 @@ from case_conversion.acronym import (
     normalize_acronyms,
     simple_acronym_detection,
 )
+from case_conversion.converter import snake
 
 
 @pytest.mark.parametrize(
@@ -51,12 +52,19 @@ def test_simple_acronym_detection(s, i, words, expected):
     "s,i,words,acronyms,expected",
     (
         (0, 1, ["FOO", "bar"], ("FOO",), 0),
-        (0, 1, ["FOO", "bar"], ("BAR",), 2),
-        (0, 1, ["FOFOO"], ("FO", "FOO"), 2),
+        (0, 1, ["FOO", "bar"], ("BAR",), 0),
+        (0, 1, ["FOFOO"], ("FOO", "FO"), 1),
     ),
 )
 def test_advanced_acronym_detection(s, i, words, acronyms, expected):
     assert advanced_acronym_detection(s, i, words, acronyms) == expected
+
+
+def test_advanced_acronym_detection_with_fallback_to_simple():
+    assert snake("fooBARBAZError", acronyms=["BAR"]) == "foo_bar_baz_error"
+    assert snake("fooBARBAZError", acronyms=["BAZ"]) == "foo_bar_baz_error"
+    assert snake("fooBARBAZBAR", acronyms=["BAZ"]) == "foo_bar_baz_bar"
+    assert snake("BARBAZBAR", acronyms=["BAZ"]) == "bar_baz_bar"
 
 
 @pytest.mark.parametrize("acronyms", ("HT-TP", "NA SA", "SU.GAR"))

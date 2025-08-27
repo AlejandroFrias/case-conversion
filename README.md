@@ -15,18 +15,17 @@ This is a port of the Sublime Text 3 plugin [CaseConversion](https://github.com/
 - Dependency free!
 - Supports Python 3.10+
 - Every case conversion from/to you ever gonna need:
-  - `camelCase`
-  - `PascalCase`
-  - `snake_case`
-  - `dash-case` (aka `kebap-case`, `spinal-case`  or `slug-case`)
-  - `CONST_CASE` (aka `SCREAMING_SNAKE_CASE`)
-  - `dot.case`
-  - `separate words`
-  - `slash/case`
-  - `backslash\\case`
-  - `Ada_Case`
-  - `Http-Header-Case`
-  - `
+  - `camel` -> "camelCase"
+  - `pascal` / `mixed` -> "PascalCase" / "MixedCase"
+  - `snake` -> "snake_case"
+  - `snake` / `kebab` / `spinal` / `slug` -> "dash-case" / "kebab-case" / "spinal-case" / "slug-case"
+  - `const` / `screaming_snake` -> "CONST_CASE" / "SCREAMING_SNAKE_CASE"
+  - `dot` -> "dot.case"
+  - `separate_words` -> "separate words"
+  - `slash` -> "slash/case"
+  - `backslash` -> "backslash\case"
+  - `ada` -> "Ada_Case"
+  - `http_header` -> "Http-Header-Case"
 
 ## Usage
 
@@ -72,14 +71,15 @@ For backwards compatibility and convenience, all converters are available as top
 'foo-bar-string'
 ```
 
-To use acronym detection simply pass in a list of `acronyms` to detect as whole words.
+Simple acronym detection comes included, by treating strings of capital letters as a single word instead of several single letter words.
 
+Custom acronyms can be supplied when needing to separate them from each other.
 ```python
 >>> import case_conversion
->>> case_conversion.snake("fooBarHTTPError")
-'foo_bar_h_t_t_p_error'  # ewwww :(
->>> case_conversion.snake("fooBarHTTPError", acronyms=['HTTP'])
-'foo_bar_http_error'  # pretty :)
+>>> case_conversion.snake("fooBADHTTPError")
+'foo_badhttp_error'  # we wanted BAD and HTTP to be separate!
+>>> case_conversion.snake("fooBarHTTPError", acronyms=['BAD', 'HTTP'])
+'foo_bad_http_error'  # custom acronyms achieved!
 ```
 
 Unicode is fully supported - even for acronyms.
