@@ -1,6 +1,8 @@
-from .parser import ParseData, parse_case
+from case_conversion.alias import alias, aliased
+from case_conversion.parser import ParsedWord, parse_into_words
 
 
+@aliased
 class Converter:
     """Class style case converter that holds the core logic.
 
@@ -18,16 +20,16 @@ class Converter:
     'some-text-to-convert'
     """
 
-    parse_data: ParseData | None
+    words: list[ParsedWord] | None
     text: str | None
     acronyms: list[str]
 
     def __init__(self, text: str | None = None, acronyms: list[str] | None = None):
         if text:
-            self.parse_data = parse_case(text, acronyms)
+            self.words = parse_into_words(text, acronyms)
             self.text = text
         else:
-            self.parse_data = None
+            self.words = None
             self.text = None
         self.acronyms = acronyms or []
 
@@ -53,16 +55,14 @@ class Converter:
         """
         if text:
             return Converter(text=text, acronyms=self.acronyms).camel()
-        elif self.parse_data:
-            words = self.parse_data.words
-            if not words:
-                return ""
-            camel_words = [word.normalized_word for word in words]
+        elif self.words:
+            camel_words = [word.normalized_word for word in self.words]
             camel_words[0] = camel_words[0].lower()
             return "".join(camel_words)
 
         return ""
 
+    @alias("mixed")
     def pascal(self, text: str | None = None) -> str:
         """Return text in PascalCase style.
 
@@ -87,9 +87,8 @@ class Converter:
         """
         if text:
             return Converter(text=text, acronyms=self.acronyms).pascal()
-        elif self.parse_data:
-            words = self.parse_data.words
-            return "".join([word.normalized_word for word in words])
+        elif self.words:
+            return "".join([word.normalized_word for word in self.words])
 
         return ""
 
@@ -115,12 +114,12 @@ class Converter:
         """
         if text:
             return Converter(text=text, acronyms=self.acronyms).snake()
-        elif self.parse_data:
-            words = self.parse_data.words
-            return "_".join([word.normalized_word.lower() for word in words])
+        elif self.words:
+            return "_".join([word.normalized_word.lower() for word in self.words])
 
         return ""
 
+    @alias("kebab", "spinal", "slug")
     def dash(self, text: str | None = None) -> str:
         """Return text in dash-case style.
 
@@ -143,12 +142,12 @@ class Converter:
         """
         if text:
             return Converter(text=text, acronyms=self.acronyms).dash()
-        elif self.parse_data:
-            words = self.parse_data.words
-            return "-".join([word.normalized_word.lower() for word in words])
+        elif self.words:
+            return "-".join([word.normalized_word.lower() for word in self.words])
 
         return ""
 
+    @alias("screaming_snake")
     def const(self, text: str | None = None) -> str:
         """Return text in CONST_CASE style.
 
@@ -173,9 +172,8 @@ class Converter:
         """
         if text:
             return Converter(text=text, acronyms=self.acronyms).const()
-        elif self.parse_data:
-            words = self.parse_data.words
-            return "_".join([word.normalized_word.upper() for word in words])
+        elif self.words:
+            return "_".join([word.normalized_word.upper() for word in self.words])
 
         return ""
 
@@ -201,9 +199,8 @@ class Converter:
         """
         if text:
             return Converter(text=text, acronyms=self.acronyms).dot()
-        elif self.parse_data:
-            words = self.parse_data.words
-            return ".".join([word.normalized_word.lower() for word in words])
+        elif self.words:
+            return ".".join([word.normalized_word.lower() for word in self.words])
 
         return ""
 
@@ -229,9 +226,8 @@ class Converter:
         """
         if text:
             return Converter(text=text, acronyms=self.acronyms).separate_words()
-        elif self.parse_data:
-            words = self.parse_data.words
-            return " ".join([word.original_word for word in words])
+        elif self.words:
+            return " ".join([word.original_word for word in self.words])
 
         return ""
 
@@ -257,9 +253,8 @@ class Converter:
         """
         if text:
             return Converter(text=text, acronyms=self.acronyms).slash()
-        elif self.parse_data:
-            words = self.parse_data.words
-            return "/".join([word.original_word for word in words])
+        elif self.words:
+            return "/".join([word.original_word for word in self.words])
 
         return ""
 
@@ -285,9 +280,8 @@ class Converter:
         """
         if text:
             return Converter(text=text, acronyms=self.acronyms).backslash()
-        elif self.parse_data:
-            words = self.parse_data.words
-            return "\\".join([word.original_word for word in words])
+        elif self.words:
+            return "\\".join([word.original_word for word in self.words])
 
         return ""
 
@@ -313,9 +307,8 @@ class Converter:
         """
         if text:
             return Converter(text=text, acronyms=self.acronyms).ada()
-        elif self.parse_data:
-            words = self.parse_data.words
-            return "_".join([w.normalized_word for w in words])
+        elif self.words:
+            return "_".join([w.normalized_word for w in self.words])
 
         return ""
 
@@ -341,9 +334,8 @@ class Converter:
         """
         if text:
             return Converter(text=text, acronyms=self.acronyms).http_header()
-        elif self.parse_data:
-            words = self.parse_data.words
-            return "-".join([w.normalized_word for w in words])
+        elif self.words:
+            return "-".join([w.normalized_word for w in self.words])
 
         return ""
 
@@ -519,6 +511,9 @@ def pascal(text: str, acronyms: list[str] | None = None) -> str:
     return Converter(text=text, acronyms=acronyms).pascal()
 
 
+mixed = pascal
+
+
 def snake(text: str, acronyms: list[str] | None = None) -> str:
     """Return text in snake_case style.
 
@@ -559,6 +554,11 @@ def dash(text: str, acronyms: list[str] | None = None) -> str:
     return Converter(text=text, acronyms=acronyms).dash()
 
 
+kebab = dash
+spinal = dash
+slug = dash
+
+
 def const(text: str, acronyms: list[str] | None = None) -> str:
     """Return text in CONST_CASE style.
 
@@ -578,6 +578,9 @@ def const(text: str, acronyms: list[str] | None = None) -> str:
         'HELLO_HTML_WORLD'
     """
     return Converter(text=text, acronyms=acronyms).const()
+
+
+screaming_snake = const
 
 
 def dot(text: str, acronyms: list[str] | None = None) -> str:

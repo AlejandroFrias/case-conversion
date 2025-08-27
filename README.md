@@ -5,32 +5,65 @@
 
 # Case Conversion
 
-This is a port of the Sublime Text 3 plugin [CaseConversion](https://github.com/jdc0589/CaseConversion), by [Davis Clark's](https://github.com/jdc0589), to a regular python package. I couldn't find any other python packages on PyPI at the time (Feb 2016) that could seamlessly convert from any case to any other case without having to specify from what type of case I was converting. This plugin worked really well, so I separated the (non-sublime) python parts of the plugin into this useful python package. I also added Unicode support via python's `unicodedata`.
+This is a port of the Sublime Text 3 plugin [CaseConversion](https://github.com/jdc0589/CaseConversion), by [Davis Clark](https://github.com/jdc0589), to a regular python package. I couldn't find any other python packages on PyPI at the time (Feb 2016) that could seamlessly convert from any case to any other case without having to specify from what type of case I was converting. This plugin worked really well, so I separated the (non-sublime) python parts of the plugin into this useful python package. I also added Unicode support via python's `unicodedata` and extended the interface some.
 
 ## Features
 
-- Autodetection of case *(no need to specify explicitly which case you are converting from!)*
+- Auto-detection of case *(no need to specify explicitly which case you are converting from!)*
 - Acronym detection *(no funky splitting on every capital letter of an all caps acronym like `HTTPError`!)*
 - Unicode supported (non-ASCII characters are first class citizens!)
 - Dependency free!
-- Supports Python 3.6+
-- Over 95 percent test coverage and full type annotation.
+- Supports Python 3.10+
 - Every case conversion from/to you ever gonna need:
-  - `camelCase`
-  - `PascalCase`
-  - `snake_case`
-  - `dash-case` (aka `kebap-case`, `spinal-case`  or `slug-case`)
-  - `CONST_CASE` (aka `SCREAMING_SNAKE_CASE`)
-  - `dot.case`
-  - `separate words`
-  - `slash/case`
-  - `backslash\\case`
-  - `Ada_Case`
-  - `Http-Header-Case`
+  - `camel` -> "camelCase"
+  - `pascal` / `mixed` -> "PascalCase" / "MixedCase"
+  - `snake` -> "snake_case"
+  - `snake` / `kebab` / `spinal` / `slug` -> "dash-case" / "kebab-case" / "spinal-case" / "slug-case"
+  - `const` / `screaming_snake` -> "CONST_CASE" / "SCREAMING_SNAKE_CASE"
+  - `dot` -> "dot.case"
+  - `separate_words` -> "separate words"
+  - `slash` -> "slash/case"
+  - `backslash` -> "backslash\case"
+  - `ada` -> "Ada_Case"
+  - `http_header` -> "Http-Header-Case"
 
 ## Usage
 
-Normal use is self-explanatory.
+
+### Converter Class
+
+Basic
+
+```python
+>>> from case_conversion import Converter
+>>> converter = Converter()
+>>> converter.camel("FOO_BAR_STRING")
+'fooBarString'
+```
+
+Initialize text when needing to convert the same text to multiple different cases.
+```python
+>>> from case_conversion import Converter
+>>> converter = Converter(text="FOO_BAR_STRING")
+>>> converter.camel()
+'fooBarString'
+>>> converter.pascal()
+'FooBarString'
+```
+
+Initialize custom acronyms
+```python
+>>> from case_conversion import Converter
+>>> converter = Converter(acronyms=["BAR"])
+>>> converter.camel("FOO_BAR_STRING")
+'fooBARString'
+```
+
+### Convenience Functions
+
+For backwards compatibility and convenience, all converters are available as top level functions. They are all shorthand for:
+
+`Converter(text, acronyms).converter_function()`
 
 ```python
 >>> import case_conversion
@@ -38,14 +71,15 @@ Normal use is self-explanatory.
 'foo-bar-string'
 ```
 
-To use acronym detection simply pass in a list of `acronyms` to detect as whole words.
+Simple acronym detection comes included, by treating strings of capital letters as a single word instead of several single letter words.
 
+Custom acronyms can be supplied when needing to separate them from each other.
 ```python
 >>> import case_conversion
->>> case_conversion.snake("fooBarHTTPError")
-'foo_bar_h_t_t_p_error'  # ewwww :(
->>> case_conversion.snake("fooBarHTTPError", acronyms=['HTTP'])
-'foo_bar_http_error'  # pretty :)
+>>> case_conversion.snake("fooBADHTTPError")
+'foo_badhttp_error'  # we wanted BAD and HTTP to be separate!
+>>> case_conversion.snake("fooBarHTTPError", acronyms=['BAD', 'HTTP'])
+'foo_bad_http_error'  # custom acronyms achieved!
 ```
 
 Unicode is fully supported - even for acronyms.
@@ -66,19 +100,24 @@ FÓÓ_BAR_STRING
 pip install case-conversion
 ```
 
-
-
 ## Contribute
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-This package is being developed with [poetry]([https://python-poetry.org/](https://python-poetry.org/)) (-> [docs]([https://python-poetry.org/docs/](https://python-poetry.org/docs/))).
+This package is being developed with [uv](https://github.com/astral-sh/uv) (-> [docs](https://docs.astral.sh/uv/)).
 
-Before opening a pull request, please make sure to:
-
-- update tests as appropriate
-
-- `flake8`, `mypy` and `pytest` are happy
+CI will run tests and lint checks.
+Locally you can run them with:
+```bash
+# runs tests with coverage
+make test
+# Runs linter (using ruff)
+make lint
+# Auto-fix linter errors (using ruff --fix)
+make format
+# run type check (using ty)
+make tc
+```
 
 
 
@@ -86,10 +125,9 @@ Before opening a pull request, please make sure to:
 
 Credit goes to [Davis Clark's](https://github.com/jdc0589) as the author of the original plugin and its contributors (Scott Bessler, Curtis Gibby, Matt Morrison). Thanks for their awesome work on making such a robust and awesome case converter.
 
-Further credit goes to @olsonpm for making this package dependency-free.
+Further thanks and credit to [@olsonpm](https://github.com/olsonpm) for making this package dependency-free and encouraging package maintenance and best practices.
 
 
+## License
 
-## Licence
-
-Using [MIT licence](LICENSE.txt) with Davis Clark's Copyright
+Using [MIT license](LICENSE.txt) with Davis Clark's Copyright
