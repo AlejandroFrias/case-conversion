@@ -46,4 +46,8 @@ build:
 
 .PHONY: upload
 upload:
-	uv run twine check $(DIST)/* && uv run twine upload $(DIST)/*
+	uvx twine check $(DIST)/* && uvx twine upload $(DIST)/*
+
+.PHONY: upload-test
+upload-test:
+	uvx twine check $(DIST)/* && uvx twine upload -r testpypi $(DIST)/*
