@@ -4,7 +4,7 @@ requires-python = ">=3.10"
 
 [[package]]
 name = "case-conversion"
-version = "3.0.0"
+version = "3.0.1"
 source = { editable = "." }
 
 [package.dev-dependencies]
@@ -20,7 +20,6 @@ dev = [
 [package.metadata]
 
 [package.metadata.requires-dev]
-build = []
 dev = [
     { name = "coverage-badge", specifier = ">=1.1.2" },
     { name = "parameterized", specifier = ">=0.9.0" },

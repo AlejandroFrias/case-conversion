@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "case-conversion"
-version = "3.0.0"
+version = "3.0.1"
 description = "Convert between different types of cases (unicode supported)"
 license = "MIT"
 authors = [{ name = "Alejandro Frias", email = "joker454@gmail.com" }]
@@ -22,6 +22,11 @@ keywords = [
 ]
 readme = "README.md"
 requires-python = ">=3.10"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+]
 
 [project.urls]
 Issues = "https://github.com/AlejandroFrias/case-conversion/issues"
